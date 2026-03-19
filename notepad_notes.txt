@@ -1,0 +1,43 @@
+Terraform provider:-
+If the infra team manually create the resources, they basically check the request and according to the request they will authenticate/login to the cloud provider and create the resource.
+But if we are creating infrastructure using terraform how will it know where it has to create resource?
+using provider block we specify which cloud provider the resource has to be created
+
+Local Provider:-
+https://registry.terraform.io/providers/hashicorp/local/latest/docs:- contains the syntax, list of resource types supported
+
+Usually cloud provider credentails are not specified in the provider block due to obvious reasons like the credentails getting exposed to people who has access to the code, then how does the authenticate happen?
+There are 6 different ways to authenticate to cloud providers using provider blocks:-
+Video:- https://www.youtube.com/watch?v=JZRMA1NyNlE
+Doc:- https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+
+1. using secrets directly in the provider block---------->very risky not suggested
+provider "aws" {
+  region     = "us-west-2"
+  access_key = aws_access_key
+  secret_key = aws_secret_key
+}
+
+2. Use environment variables
+
+Terraform commands:-
+
+1. terraform -help
+2. terraform -version
+
+3. terraform fmt:- 
+It is used to automatically format Terraform configuration files to a canonical format and style. This helps ensure that your Terraform code is consistent and easy to read, which is especially useful when working in teams.
+
+4. terraform get:-
+Note this is usually not required as this is part of the terraform init command
+It is used to download and update modules mentioned in your Terraform configuration files. Modules are reusable pieces of Terraform code that can be shared across different projects and teams.
+
+5. terraform validate:-
+check the syntax and validitate the configuration files in your directory and without actually deploying any resources. terraform init should be run before this command.
+
+6. terraform taint:-
+The terraform taint command is used to mark a resource for recreation during the next terraform apply(only once). This is useful when you want to force the recreation of a resource without making any changes to its configuration. 
+eg:- terraform taint <provide>_<resourcetype>.<resourcename>
+
+1. terraform apply -refresh-only:-
+This will update the Terraform state to reflect any changes made outside of Terraform, such as manual changes made in the AWS console. This command will only refresh the state without applying any new changes, ensuring that the state is up to date with the actual infrastructure.
