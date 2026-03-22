@@ -18,9 +18,16 @@ provider "aws" {
   secret_key = aws_secret_key
 }
 
-2. Use environment variables
+NOTE:- you can store your terraform files in github repo, create github actions workflow which contains aws-configure step to authenticate to aws, you dont have to sepcify any secrets anywhere in the code.
+
+Some files to know about:-
+.terraform.lock.hcl
 
 Terraform commands:-
+
+1. terraform init, terraform init -upgrade
+2. terraform plan
+3. terraform apply:- authenticates to AWS and creates the actual resources by comparing the statefilw and terrafrom files.
 
 1. terraform -help
 2. terraform -version
@@ -41,3 +48,8 @@ eg:- terraform taint <provide>_<resourcetype>.<resourcename>
 
 1. terraform apply -refresh-only:-
 This will update the Terraform state to reflect any changes made outside of Terraform, such as manual changes made in the AWS console. This command will only refresh the state without applying any new changes, ensuring that the state is up to date with the actual infrastructure.
+
+Learning structure:-
+
+1. Terraform version, terraform providers, init, plan, apply what they actually so
+2.Variables
