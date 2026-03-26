@@ -23,11 +23,36 @@ NOTE:- you can store your terraform files in github repo, create github actions 
 Some files to know about:-
 .terraform.lock.hcl
 
+Terraform statefile(terraform.tfstate):-
+1. Terraform must store state about your managed infrastructure and configuration. This state is used by Terraform to map real world resources to your configuration, keep track of metadata, and to improve performance for large infrastructures.
+2. This statefile will be modified whenever you execute terraform commands that will impact the real world infra
+eg:- terraform apply, terraform destroy
+
+Local Statefile:- the file that exists in ur local machine when u execute tf apply
+Remote Statefile:- the statefile automatically uploadded to AWS s3 or azure storage.
+
 Terraform commands:-
 
-1. terraform init, terraform init -upgrade
+1. terraform init, terraform init -upgrade:-
+-> Initializes your project(downloads providers, modules, backends)
+-> creates a terraform.lck.hcl with all the providers versions.
+-> It will replace the varibles in the terraform configuration files when we are using .tfvars 
+When to use:-
+-> first time running TF
+-> After changing providers/backend
+
 2. terraform plan
-3. terraform apply:- authenticates to AWS and creates the actual resources by comparing the statefilw and terrafrom files.
+-> This will connecy to the cloud provider and fetch the current resources that exists.
+-> Its like a dry run which shows what will be created.
+-> You can pass variables values just like u do for apply using -var
+-> save plan:- terraform plan -out=tfplan
+-> terraform plan -refresh=false:- not fetch anything from clous using local/remote state only
+
+NOTE:- why does tf plan connect to cloud when we already have .tfstate that contains the state of the resource in cloud?
+verify reality and detect drift (changes made outside Terraform), maybe someone would have manually updated the resource in AWS.
+
+3. terraform apply:- authenticates to AWS and creates the actual resources by comparing the statefile and terrafrom files.
+4. terraform destroy
 
 1. terraform -help
 2. terraform -version
@@ -40,7 +65,9 @@ Note this is usually not required as this is part of the terraform init command
 It is used to download and update modules mentioned in your Terraform configuration files. Modules are reusable pieces of Terraform code that can be shared across different projects and teams.
 
 5. terraform validate:-
-check the syntax and validitate the configuration files in your directory and without actually deploying any resources. terraform init should be run before this command.
+-> check the syntax and validitate the configuration files in your directory and without actually deploying any resources.
+eg:- missing brackets, incorrect parameters names
+-> terraform init should be run before this command.
 
 6. terraform taint:-
 The terraform taint command is used to mark a resource for recreation during the next terraform apply(only once). This is useful when you want to force the recreation of a resource without making any changes to its configuration. 
