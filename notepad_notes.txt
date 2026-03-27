@@ -46,12 +46,36 @@ When to use:-
 -> Its like a dry run which shows what will be created.
 -> You can pass variables values just like u do for apply using -var
 -> save plan:- terraform plan -out=tfplan
--> terraform plan -refresh=false:- not fetch anything from clous using local/remote state only
+-> terraform plan -refresh=false:- not fetch anything from cloud using local/remote state only
+
+step1:- reads the configuration files
+step2:- loads the current state from ur local or remote
+step3:- connects to cloud provider and checks the actual infrastructure for any drift
+step4:- displays the output what will be created, update or deleted.
 
 NOTE:- why does tf plan connect to cloud when we already have .tfstate that contains the state of the resource in cloud?
 verify reality and detect drift (changes made outside Terraform), maybe someone would have manually updated the resource in AWS.
 
 3. terraform apply:- authenticates to AWS and creates the actual resources by comparing the statefile and terrafrom files.
+step3.1:- reads the configuration files
+step3.2:- loads the current state from ur local or remote
+step3.3:- connects to cloud provider and checks the actual infrastructure for any drift
+step3.4:- creates actual infratsructure.
+
+NOTe:- If we want to make some changes to already existing infrastructure, then using the TF files, the infra will get updated if they are mutable like instance type, if they are immutable terraform will destroy and create new ones.
+
+NOTE:- what is the point of comapring statefile and actual infrastructure, because the actual infrastructure will anyways be ovverriden right? its because the user must be aware what is the infra in cloud and what gets overriden
+1. 🧩 Detect drift (very important in real world)
+Example:
+• Your config says: instance_type = t2.micro
+• State file also says: t2.micro
+• But someone manually changed it in AWS to t2.large
+👉 If Terraform doesn’t check real infra:
+• It will think everything is fine ❌
+• Drift goes unnoticed
+👉 Because it checks real infra:
+• It detects mismatch1. 🧩 Detect drift (very important in real world)
+
 4. terraform destroy
 
 1. terraform -help
