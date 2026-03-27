@@ -31,6 +31,88 @@ eg:- terraform apply, terraform destroy
 Local Statefile:- the file that exists in ur local machine when u execute tf apply
 Remote Statefile:- the statefile automatically uploadded to AWS s3 or azure storage.
 
+Resource Attribute references:-
+In Terraform, resource attribute references are how you use values from one resource inside another resource.
+Think of it like:
+👉 “Take output from Resource A → use it in Resource B”In Terraform, resource attribute references are how you use values from one resource inside another resource.
+
+example:-
+# Step 1: Create a VPC
+resource "aws_vpc" "main_vpc" {
+ cidr_block = "10.0.0.0/16"
+}
+# Step 2: Create a Subnet inside that VPC
+resource "aws_subnet" "subnet1" {
+ vpc_id     = aws_vpc.main_vpc.id   # 🔥 Resource Attribute Reference
+ cidr_block = "10.0.1.0/24"
+}
+# Step 3: Create an EC2 Instance inside that Subnet
+resource "aws_instance" "web_server" {
+ ami           = "ami-12345678"
+ instance_type = "t2.micro"
+ subnet_id     = aws_subnet.subnet1.id   # 🔥 Another Reference
+}
+# Step 4: Output the Public IP of the Instance
+output "instance_public_ip" {
+ value = aws_instance.web_server.public_ip   # 🔥 Attribute Reference
+}
+
+Data Sources:-
+Think of it like this:
+• resource block → creates something
+• data block → reads something that already exists
+⸻
+🔹 Why do we use data sources?
+You use data sources when:
+• Infrastructure already exists (created manually or by another Terraform project)
+• You want to reuse existing values (like VPC IDs, AMI IDs, subnets, etc.)
+• You don’t want Terraform to manage (create/delete) that resource
+
+example:-
+🧩 Scenario (Very realistic in companies)
+• Network team already created a VPC
+• Your repo only creates:
+• EC2 instance
+• Subnet (optional)
+👉 You should NOT recreate VPC
+👉 You will fetch it using a data source
+
+data.tf:-
+# Fetch existing VPC
+data "aws_vpc" "existing_vpc" {
+ filter {
+   name   = "tag:Name"
+   values = ["prod-vpc"]
+ }
+}
+# Fetch existing subnet
+data "aws_subnet" "existing_subnet" {
+ filter {
+   name   = "tag:Name"
+   values = ["prod-subnet"]
+ }
+}
+# Fetch latest AMI
+data "aws_ami" "latest_ami" {
+ most_recent = true
+ owners      = ["amazon"]
+ filter {
+   name   = "name"
+   values = ["amzn2-ami-hvm-*"]
+ }
+}
+
+ec2.tf
+resource "aws_instance" "my_ec2" {
+ ami           = data.aws_ami.latest_ami.id
+ instance_type = "t2.micro"
+ subnet_id = data.aws_subnet.existing_subnet.id
+ tags = {
+   Name = "my-ec2"
+ }
+}
+
+
 Terraform commands:-
 
 1. terraform init, terraform init -upgrade:-
@@ -103,4 +185,6 @@ This will update the Terraform state to reflect any changes made outside of Terr
 Learning structure:-
 
 1. Terraform version, terraform providers, init, plan, apply what they actually so
-2.Variables
+2.Variables, terraform statefiles, terraform validate, fmt
+3. resource attribute references, output variables, mutable n immutable infrastructure.
+4. data sources.
