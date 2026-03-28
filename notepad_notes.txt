@@ -1,3 +1,17 @@
+File structure and organization:-
+
+Common terraform files, not manadatory but generally used names:-(created by you)
+main.tf
+variables.tf
+providers.tf
+outputs.tf
+terraform.tfvars
+
+Created by terraform:-
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup:- backup of previous terraform statefile before terraform writes anything new to the statefile.
+
 Terraform provider:-
 If the infra team manually create the resources, they basically check the request and according to the request they will authenticate/login to the cloud provider and create the resource.
 But if we are creating infrastructure using terraform how will it know where it has to create resource?
@@ -20,16 +34,37 @@ provider "aws" {
 
 NOTE:- you can store your terraform files in github repo, create github actions workflow which contains aws-configure step to authenticate to aws, you dont have to sepcify any secrets anywhere in the code.
 
-Some files to know about:-
-.terraform.lock.hcl
 
 Terraform statefile(terraform.tfstate):-
 1. Terraform must store state about your managed infrastructure and configuration. This state is used by Terraform to map real world resources to your configuration, keep track of metadata, and to improve performance for large infrastructures.
 2. This statefile will be modified whenever you execute terraform commands that will impact the real world infra
 eg:- terraform apply, terraform destroy
+3. It is also used for team collaboration.
 
 Local Statefile:- the file that exists in ur local machine when u execute tf apply
-Remote Statefile:- the statefile automatically uploadded to AWS s3 or azure storage.
+Remote Statefile:- the statefile automatically uploadded to AWS s3 or azure storage. it must be specifies in .tf files then only it will push the code to s3. It avoids dupliaction of resources when multiple people are working
+
+✅ Step-by-step flow
+1. Read the state file
+• What Terraform thinks exists
+2. Refresh (very important step)
+• Connects to cloud (AWS/Azure)
+• Gets actual infrastructure state
+• Updates state in memory (not final yet)
+3. Compare 3 things
+• Your .tf configuration
+• Refreshed real infrastructure
+• State file
+4. Create an execution plan
+• What needs to be created/updated/deleted
+5. Apply changes to infrastructure
+• This is where actual resources are modified
+6. Update state file (final step)
+• After successful changes, state file is written
+
+🔹 Simple explanation
+• Memory = RAM (temporary working space)
+• State file (terraform.tfstate) = permanent storage on disk
 
 Resource Attribute references:-
 In Terraform, resource attribute references are how you use values from one resource inside another resource.
@@ -142,7 +177,9 @@ verify reality and detect drift (changes made outside Terraform), maybe someone 
 step3.1:- reads the configuration files
 step3.2:- loads the current state from ur local or remote
 step3.3:- connects to cloud provider and checks the actual infrastructure for any drift
-step3.4:- creates actual infratsructure.
+step3.4:- creates actual infrastructure.
+
+NOTE:- auto-approve is not recommended for prod deployments.
 
 NOTe:- If we want to make some changes to already existing infrastructure, then using the TF files, the infra will get updated if they are mutable like instance type, if they are immutable terraform will destroy and create new ones.
 
@@ -187,4 +224,5 @@ Learning structure:-
 1. Terraform version, terraform providers, init, plan, apply what they actually so
 2.Variables, terraform statefiles, terraform validate, fmt
 3. resource attribute references, output variables, mutable n immutable infrastructure.
-4. data sources.
+4. data sources
+5. Modules
