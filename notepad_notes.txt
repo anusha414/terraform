@@ -47,6 +47,18 @@ eg:- terraform apply, terraform destroy
 Local Statefile:- the file that exists in ur local machine when u execute tf apply
 Remote Statefile:- the statefile automatically uploadded to AWS s3 or azure storage. it must be specifies in .tf files then only it will push the code to s3. It avoids dupliaction of resources when multiple people are working
 
+Local statefile Disadvantages:-
+“The main disadvantages of Terraform local state are:”
+1. No collaboration support
+• State is stored locally, so teams cannot share it
+• Leads to inconsistencies and duplicate resource creation
+2. No state locking
+• Multiple users running Terraform simultaneously can corrupt the state
+3. Risk of state loss
+• If the local file is deleted or corrupted, Terraform loses track of infrastructure
+4. Security concerns
+• State file may contain sensitive data and is not encrypted by default
+
 ✅ Step-by-step flow
 1. Read the state file
 • What Terraform thinks exists
@@ -68,6 +80,59 @@ Remote Statefile:- the statefile automatically uploadded to AWS s3 or azure stor
 🔹 Simple explanation
 • Memory = RAM (temporary working space)
 • State file (terraform.tfstate) = permanent storage on disk
+
+Remote Statefile in terraform:-
+
+example:-
+terraform {
+ backend "s3" {
+   bucket         = "my-terraform-state-bucket"
+   key            = "dev/terraform.tfstate"
+   region         = "us-east-1"
+   dynamodb_table = "terraform-lock-table"
+   encrypt        = true
+ }
+}
+
+State Locking in terraform:-
+State locking ensures that only one Terraform operation can modify the state at a time, preventing conflicts and corruption
+🔴 Why is it Needed?
+Terraform state is a single source of truth.
+👉 If two people run terraform apply simultaneously:
+• Both try to update the state file
+• Leads to race conditions
+• Results in corrupted or inconsistent infrastructure
+
+🧠 Real-Time Scenario
+• You run terraform apply
+• Your teammate tries at the same time
+👉 Terraform will show:
+“Error: state is locked”
+This prevents:
+• Duplicate resources
+• State corruption
+
+🔍 When Locking Happens (Important)
+State locking is used for commands that touch the state:
+• terraform plan → reads state
+• terraform apply → modifies state
+• terraform destroy → modifies state
+• terraform refresh → updates state
+
+DynamoDB statelocking
+“DynamoDB is used by Terraform to maintain a lock record so that only one user can modify the state file at a time.”
+
+👉 Here’s what happens:
+1. Terraform tries to run apply
+2. It creates a lock entry (row) in DynamoDB table
+3. If the lock exists → other users are blocked
+4. After completion → lock entry is deleted
+
+🔍 What’s Inside the DynamoDB Table?
+• Lock ID
+• Operation (apply/plan)
+• Who locked it
+• Timestamp
 
 Resource Attribute references:-
 In Terraform, resource attribute references are how you use values from one resource inside another resource.
