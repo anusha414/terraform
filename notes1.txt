@@ -19,3 +19,15 @@ Duplicate the code if infrastructure has to be deployed to multiple environments
 
 The solution is HCP terraform
 1. It has inbuilt git integration which means we dont have to do the git clone n git checkout, hcp will do it automatically.
+2. it supports workspaces and projects.
+3. Inbuilt storage for vars, statefiles and crdentails, you dont have to use remote backend or .tfvars files.
+4. Inbuilt support for private registry
+5. GUI interface
+
+Hierarchy in HCP:-
+
+Organization
+    |
+projects
+    |
+workspaces------>collection of terraform files that belong to a single application related infrastructure or that belong to a single aws service something like that
