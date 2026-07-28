@@ -1,3 +1,4 @@
+Video:- https://www.youtube.com/watch?v=n1kS8jKf70E&t=2262s
 There are 2 types of registries in terraform:-
 1. public Registry:- https://registry.terraform.io/
 2. private Registry:-
@@ -31,3 +32,19 @@ Organization
 projects
     |
 workspaces------>collection of terraform files that belong to a single application related infrastructure or that belong to a single aws service something like that
+
+Workspace = where state, variables, and runs are managed.
+Workflow = the sequence of steps (plan → review → approve → apply) used to deploy infrastructure.
+
+You can create workflows in 3 ways:-
+
+1. Version control workflow:-
+supported version controls are github, gitlab, bitbucket and Azuredevops
+whenever there is a change in the repository according to the details we have configured in the workflow creation a run will be triggered automatically.
+2. CLI driven workflow:-
+We can map local terraform folder with HCP workflows
+3. API Driven workflow:-
+
+NOTE:- Whenever you are using HCP terraform we should not give backend details in the configuration files, if it is present it will throw error.
+
+
