@@ -1,0 +1,21 @@
+There are 2 types of registries in terraform:-
+1. public Registry:- https://registry.terraform.io/
+2. private Registry:-
+It was formerly known as terraform cloud and now we call it ias HCP terraform (HashiCorp Cloud platform).
+
+What are drawbacks with existing system? why do we need HCP terraform?
+1. Login credentials
+We had to either manually provide the aws or azure credentials or store it locally in files or as environemnt variables
+2. Secrets
+In terraform secrets can be encoded but not encrypted, we will have to use third party services such as aws secret manager or azure key vault to store secrets.
+Terraform does not provide any secrets management.
+3. Automate:-
+No automation provided by terraform, you had to run terraform commands manually or use CI/CD tools such as github actions or gitlab.
+4. Store Modules:-
+Custom modules you created were available locally and use them locally.
+Terraform does not provide any default registries to store and share the modules.
+5. Multiple environments:-
+Duplicate the code if infrastructure has to be deployed to multiple environments or use terraform workspaces locally.
+
+The solution is HCP terraform
+1. It has inbuilt git integration which means we dont have to do the git clone n git checkout, hcp will do it automatically.
