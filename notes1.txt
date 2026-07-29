@@ -47,4 +47,8 @@ We can map local terraform folder with HCP workflows
 
 NOTE:- Whenever you are using HCP terraform we should not give backend details in the configuration files, if it is present it will throw error.
 
+TERRAFORM WITH GITHUB ACTIONS:-
+
+
+
 
