@@ -294,3 +294,79 @@ Learning structure:-
 3. resource attribute references, output variables, mutable n immutable infrastructure.
 4. data sources
 5. Modules
+
+TERRAFORM PROVISIONERS:-
+Video:- https://www.youtube.com/watch?v=U_jTWB8Ma6I
+1. Terraform is used for infrastructure deployment, whereas provisioners are used for infrastructure management.
+2. These provisioners cannot perform huge tasks like the configuration management tools such as Ansible, chef or puppet.
+3.  Provisioners allow you to execute commands or scripts on remote resources or on the local machine where Terraform is run. For example, the remote-exec provisioner can be used to execute a bash script immediately after a resource is created.
+3. Why use provisioners?
+Examples:
+Install packages on a newly created VM
+Copy configuration files to a server
+Run shell scripts after infrastructure deployment
+Perform cleanup tasks before resource destruction
+
+NOTE:- Use Terraform provisioners only for lightweight, one-time post-provisioning actions when no provider-native or configuration-management solution exists. For server configuration, software installation, patching, compliance, and ongoing state management, use dedicated configuration tools such as Ansible, Puppet, or Chef. Terraform provisions infrastructure, while configuration management tools configure and maintain it.
+Use provisioners only for small, one-time actions that happen immediately after a resource is created or just before it is destroyed, and when there is no better native option available. HashiCorp explicitly recommends provisioners as a "last resort."
+
+There are 3 types of Provisioners:-
+1. Local-exec
+2. File
+3. Remote-exec
+
+1. file Provisioner:-
+The file provisioner copies files or directories from the machine running Terraform to the target resource (VM/server). eg:- github actions runner or laptop
+eg:-
+resource "aws_instance" "web" {
+  ami           = "ami-12345"
+  instance_type = "t2.micro"
+  provisioner "file" {
+    source      = "app.conf"
+    destination = "/tmp/app.conf"
+  }
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("key.pem")
+    host        = self.public_ip
+  }
+}
+
+2. local-exec provisioner:-
+Runs a command on the machine where Terraform is executing.
+The value of local-exec is that it can use information generated during Terraform execution and perform actions automatically as part of the deployment workflow.
+That could be:
+Your laptop
+Azure DevOps agent
+GitHub Actions runner
+Jenkins server
+eg:-
+resource "aws_instance" "web" {
+  provisioner "local-exec" {
+    command = "echo VM Created Successfully"
+  }
+}
+
+3. remote-exec provisioner:-
+Runs commands directly on the remote server after Terraform creates it.
+resource "aws_instance" "web" {
+  ami           = "ami-12345"
+  instance_type = "t2.micro"
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum update -y",
+      "sudo yum install nginx -y",
+      "sudo systemctl start nginx"
+    ]
+  }
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("key.pem")
+    host        = self.public_ip
+  }
+}
+
+NOTE:- Connection block is required to connect to the VMs or resources that terraform created, terraform only knows about the resource name, id , public ip, private ip.
+It is not aware how to connect to the VM, so connection block is mandatory.
