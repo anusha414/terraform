@@ -370,3 +370,26 @@ resource "aws_instance" "web" {
 
 NOTE:- Connection block is required to connect to the VMs or resources that terraform created, terraform only knows about the resource name, id , public ip, private ip.
 It is not aware how to connect to the VM, so connection block is mandatory.
+
+TERRAFORM DRIFT:-(Video:- https://www.youtube.com/watch?v=W_8wYhF6DnQ)
+I have created an AWS resource with instance-type "t2.micro" using terraform configuration files in the github for the application "payments".
+This resources was facing some issues so the developer changed the instance-type to "t2.small" from AWS management console and that change was not updated in the github TF file.
+The difference between the desired state which is terraform configuration files in the github and the actual state of the AWS infra is called drift.
+
+What is the drawback of this?
+You might assume that as the instance type has been changed application is running fine then what is the issue?
+The real issue is if tomorrow someone want to modify some other property like tags of the aws instance and he might do that using terraform configuration files.
+In this case the existing t2.small might get updated back to t2.micro as the drift still exists.
+NOTE:- Terraform plan will display the changes that it will make to actual infrastructure, so pay attention to that
+
+How terraform detects drift?
+when we run "terraform plan"
+Terraform:
+Reads the state file
+Queries AWS/Azure/GCP APIs
+Compares actual infrastructure with desired configuration
+
+how to Resolve the drift?
+1. If Terraform configuration is the source of truth, then do "terraform apply"
+2. If the manual change was intentional, update the terraform configuration files manually and then terraform apply.
+
