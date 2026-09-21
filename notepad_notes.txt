@@ -389,7 +389,13 @@ Reads the state file
 Queries AWS/Azure/GCP APIs
 Compares actual infrastructure with desired configuration
 
++:- create new one
+-;- delete
+~;- update
+-/+:- delete and then create
+
 how to Resolve the drift?
+1. Check who made the change in the infrastructure using AWS cloudtrail.
 1. If Terraform configuration is the source of truth, then do "terraform apply"
 2. If the manual change was intentional, update the terraform configuration files manually and then terraform apply.
 
