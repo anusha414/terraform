@@ -399,3 +399,14 @@ how to Resolve the drift?
 1. If Terraform configuration is the source of truth, then do "terraform apply"
 2. If the manual change was intentional, update the terraform configuration files manually and then terraform apply.
 
+TERRAFORM LOCALS:-(Video:- https://www.youtube.com/watch?v=_KswyicGZeI)
+Think of locals as variables that Terraform uses only internally to make your code cleaner and avoid repetition.
+A local value is a named expression that lets you assign a value once and reference it multiple times throughout your Terraform configuration.
+NOTE:- Locals can be used only within the terraform file that they are defined and not any other files.
+
+difference between terraform local and terraform variables:-
+variables Used for values supplied from outside Terraform.
+Locals Used for values calculated or reused inside Terraform.
+
+
+
