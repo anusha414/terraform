@@ -408,5 +408,9 @@ difference between terraform local and terraform variables:-
 variables Used for values supplied from outside Terraform.
 Locals Used for values calculated or reused inside Terraform.
 
+TERRAFORM FUNCTIONS:-
+
+
+
 
 
