@@ -1,0 +1,11 @@
+HashiCorp Vault:-
+
+1. It is a secret management tool, it can be integrated with Ansible, k8s, CI/CD.
+2. It is like a tool and it must be installed on servers.
+3. Once installed there are 2 types of vault servers avaialble, development and production.
+4. Secret engine:- There are different types of engines available like k8s, aws, azure. you have to specify a path and the type of engine so that the path will be created and
+all the secrets of that engine will be stored on that particular path of the ec2.
+5. How can terraform or other engines use these secrets stored in hashicorp vault? using access(similar to IAM role) and policies(IIAM policy).
+6. Policies:-
+7. Access:-
+output:- Please fetch the role-id and secret-id just like we use access-key and secret-key in the AWS.
