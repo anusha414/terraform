@@ -5,6 +5,13 @@ Accidental Infrastructure Drift
 EKS Creation Failure because no IAM permissions.
 Dependency error
 
+2. why s3 is commonly used as remote backend?
+Centralized state storage
+State locking
+Backup/versioning
+High availability
+
+
 2.  if we use terraform init plan apply as part of worklfow they execute one after the other n no human intervention will be needed but for terraform case 
 we need to first observe the ouput of plan and this stuff right? howw does it actually work in real world?
 PR Created
