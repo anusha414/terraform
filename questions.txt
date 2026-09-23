@@ -1,0 +1,34 @@
+1. can you explain some issues you faced during terraform infrastructure deployment?
+State Lock Not Released
+Resource Already Exists Error
+Accidental Infrastructure Drift
+EKS Creation Failure because no IAM permissions.
+Dependency error
+
+2.  if we use terraform init plan apply as part of worklfow they execute one after the other n no human intervention will be needed but for terraform case 
+we need to first observe the ouput of plan and this stuff right? howw does it actually work in real world?
+PR Created
+    ↓
+terraform validate
+    ↓
+terraform plan
+    ↓
+Plan reviewed by team
+    ↓
+PR approved & merged
+    ↓
+Production workflow starts
+    ↓
+WAITING FOR APPROVAL
+    ↓
+Manager / Platform Team approves
+    ↓
+terraform apply
+
+Repository
+  → Settings
+      → Environments
+          → New Environment
+Required reviewers:
+- Platform Team
+- Team Lead
