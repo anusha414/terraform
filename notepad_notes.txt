@@ -35,7 +35,8 @@ provider "aws" {
 NOTE:- you can store your terraform files in github repo, create github actions workflow which contains aws-configure step to authenticate to aws, you dont have to sepcify any secrets anywhere in the code.
 
 NOTE:-
-Though terraform version is different from provider version, you must be aware or take care of specifying terraform version in the version.tf because not all versions of terraform will be feasible with all providers, check the github repo of the provider readme.md to find which terraform versions the provider supports.
+Though terraform version is different from provider version, you must be aware or take care of specifying terraform version in the version.tf because not all versions of
+terraform will be feasible with all providers, check the github repo of the provider readme.md to find which terraform versions the provider supports.
 
 
 Terraform statefile(terraform.tfstate):-
