@@ -282,11 +282,29 @@ eg:- missing brackets, incorrect parameters names
 -> terraform init should be run before this command.
 
 6. terraform taint:-
+"This resource exists, but I don't trust it. Destroy it and recreate it during the next apply."
 The terraform taint command is used to mark a resource for recreation during the next terraform apply(only once). This is useful when you want to force the recreation of a resource without making any changes to its configuration. 
 eg:- terraform taint <provide>_<resourcetype>.<resourcename>
+NOTE:- we can manually also delete the instance but we have to login, find the instance, delete it and then tf plan n apply instead we can use terraform taint.
 
-1. terraform apply -refresh-only:-
+7. terraform debug:-
+Terraform debug is mainly used when you want to see what Terraform is doing internally while running commands like plan, apply, init, etc.
+export TF_LOG=DEBUG
+export TF_LOG_PATH=terraform.log
+terraform apply
+
+TERRAFORM APPLY:-
+1. terraform apply
+2. terraform apply -auto-approve
+3. terraform apply -refresh=false:- Terraform will Not check real infrastructure first. TF will Use existing state file.
+4. terraform apply -parallelism=5, default is 10
+5. Production apply:-
+terraform plan -out=tfplan
+terraform apply tfplan
+6. terraform apply -refresh-only:-
 This will update the Terraform state to reflect any changes made outside of Terraform, such as manual changes made in the AWS console. This command will only refresh the state without applying any new changes, ensuring that the state is up to date with the actual infrastructure.
+7. terraform apply -replace="aws_instance.web":- same usecase as terraform taint
+8. terraform apply -target="aws_instance.web":- -target is used when you want Terraform to focus on only a specific resource (and its dependencies) instead of evaluating and applying changes for the entire configuration.
 
 Terraform state commands:-
 
