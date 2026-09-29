@@ -288,6 +288,47 @@ eg:- terraform taint <provide>_<resourcetype>.<resourcename>
 1. terraform apply -refresh-only:-
 This will update the Terraform state to reflect any changes made outside of Terraform, such as manual changes made in the AWS console. This command will only refresh the state without applying any new changes, ensuring that the state is up to date with the actual infrastructure.
 
+Terraform state commands:-
+
+1. terraform state list:- It will list the resources present in the statefile.
+eg:- aws_instance.web
+aws_s3_bucket.logs
+module.vpc.aws_vpc.main
+
+2. terraform state show <resource_type>.<resource_name>:- This will display the data related to that resource alone from terraform state file, Displays the state in a human-readable format. But this is mainly for reading, not for backing up or manipulating state.
+# local_file.top10:
+resource "local_file" "top10" {
+    content              = <<-EOT
+        1. Naruto
+        2. DragonBallZ
+        3. Death Note
+        Fullmetal Alchemist
+        One-Punch Man
+    EOT
+    content_base64sha256 = "E1+CvFzTzYIFBGHKR7PslnAA/Fy5GsdbD0DF32Vvh1c="
+    content_base64sha512 = "qhCSaRzN1IBed4NY9elGp28ybdw+zbQD9DCTsQatrrnFtanJP9UgMaj39r4Zq65vHNmAmC1kc4CHvxgw4hiRJQ=="
+    content_md5          = "dd34c45437f5a7a0c66835a80ed8c58e"
+    content_sha1         = "a96174702c7d532583e312e123a216e35721021f"
+    content_sha256       = "135f82bc5cd3cd82050461ca47b3ec967000fc5cb91ac75b0f40c5df656f8757"
+    content_sha512       = "aa1092691ccdd4805e778358f5e946a76f326ddc3ecdb403f43093b106adaeb9c5b5a9c93fd52031a8f7f6be19abae6f1cd980982d64738087bf1830e2189125"
+    directory_permission = "0777"
+    file_permission      = "0777"
+    filename             = "/root/anime/top10.txt"
+    id                   = "a96174702c7d532583e312e123a216e35721021f"
+}
+
+3. terraform state mv <old_resource> <new_resource>:- mostly useful to change the resource name
+NOTE:- 
+4. terraform state rm <resource_type>.<resource_name>:- this will delete the resource details from the statefile, you will have manually delete the details from config files.
+NOTE:- When would you use terraform state rm?
+If a resource exists in AWS but is incorrectly tracked in Terraform state, I can remove it using terraform state rm. Terraform stops managing that resource, but the actual infrastructure remains untouched. I might then re-import it or allow another Terraform configuration to manage it.
+
+5. terraform state pull:- resource data is usually stored in statefile as JSOn format. This command will the data as it is present in the statefile.
+This command is useful if u want to create backup of statefile. Returns the raw Terraform state JSON exactly as stored in the backend.
+
+6. terraform state push <file_name>:- It will use this file data to create terraform statefile, terraform init must be executed first if u have backend.
+eg:- terraform state push state.json:- this will create .tfstate automatically only if it matches the statefile syntax
+
 Learning structure:-
 
 1. Terraform version, terraform providers, init, plan, apply what they actually so
