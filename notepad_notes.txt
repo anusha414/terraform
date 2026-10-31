@@ -17,6 +17,10 @@ If the infra team manually create the resources, they basically check the reques
 But if we are creating infrastructure using terraform how will it know where it has to create resource?
 using provider block we specify which cloud provider the resource has to be created
 
+provider "aws" {
+  region = var.aws_region
+}
+
 Local Provider:-
 https://registry.terraform.io/providers/hashicorp/local/latest/docs:- contains the syntax, list of resource types supported
 
