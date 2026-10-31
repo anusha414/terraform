@@ -265,6 +265,14 @@ step4:- displays the output what will be created, update or deleted.
 NOTE:- why does tf plan connect to cloud when we already have .tfstate that contains the state of the resource in cloud?
 verify reality and detect drift (changes made outside Terraform), maybe someone would have manually updated the resource in AWS.
 
+NOTE:- terraform plan refreshes terraform statefile, So the state becomes synchronized with the real infrastructure, and the plan shows how to move from the actual state to the desired configuration.
+1. Read .tf files
+2. Read backend configuration
+3. Load remote state
+4. Refresh actual infrastructure
+5. Compare actual vs desired
+6. Generate plan
+
 3. terraform apply:- authenticates to AWS and creates the actual resources by comparing the statefile and terrafrom files.
 step3.1:- reads the configuration files
 step3.2:- loads the current state from ur local or remote
